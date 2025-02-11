@@ -1,0 +1,21 @@
+{
+  "name": "hw3",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "docs": "jsdoc -c jsdoc.json"
+  },
+  "type": "module",
+  "keywords": [],
+  "author": "Huizhirong Guo",
+  "license": "MIT",
+  "description": "",
+  "devDependencies": {
+    "@babel/core": "^7.26.8",
+    "@babel/preset-env": "^7.26.8",
+    "babel-jest": "^29.7.0",
+    "jest": "^29.7.0",
+    "jsdoc": "^4.0.4"
+  }
+}
