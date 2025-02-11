@@ -1,7 +1,7 @@
 import { CharacterFactory } from './src/CharacterFactory.js';
 import { Weapon } from './src/Weapon.js';
 import { Armor } from './src/Armor.js';
-import { EquipmentManager } from './src/EquipmentManager.js';
+// import { EquipmentManager } from './src/EquipmentManager.js';
 import { CombatPowerCalculator } from './src/CombatPowerCalculator.js';
 
 // create characters
@@ -9,63 +9,24 @@ const warrior = CharacterFactory.createCharacter('Warrior', 'Thor');
 const mage = CharacterFactory.createCharacter('Mage', 'Merlin');
 
 // create items
-const sword = new Weapon('Sword', 50);
-const axe = new Weapon('Axe', 40);
-const machete = new Weapon('Machete', 60);
+const sword = new Weapon('Sword', 60, 'sword'); // Valid for Warrior
+const axe = new Weapon('Axe', 55, 'axe'); // Valid for Warrior
+const machete = new Weapon('Dagger', 40, 'dagger'); // Valid for Mage
+const wand = new Weapon('Wand', 35, 'wand'); // Invalid for both
 
-const robe = new Armor('Magic Robe', 30);
-const shield = new Armor('Shield', 20);
-const helmet = new Armor('Helmet', 15);
-const boots = new Armor('Boots', 10);
-
-// Get the EquipmentManager instance
-const manager = new EquipmentManager();
+const plateArmor = new Armor('Steel Plate', 40, 'plate'); // Valid for Warrior
+const clothArmor = new Armor('Silk Robe', 20, 'cloth'); // Valid for Mage
+const leatherArmor = new Armor('Leather Vest', 25, 'leather'); // Invalid for both
+const helmet = new Armor('Helmet', 15, 'plate'); // ✅ Valid for Warrior
+const boots = new Armor('Boots', 10, 'plate'); // ✅ Valid for Warrior
 
 console.log('\n=== Testing Warrior Equipment ===');
-[sword, axe, machete].forEach((weapon) => {
-  if (manager.canEquipWeapon(warrior)) {
-    warrior.equipWeapon(weapon);
-    console.log(`${warrior.name} equipped ${weapon.name}`);
-  } else {
-    console.log(
-      `❌ ${warrior.name} cannot equip ${weapon.name}, weapon limit reached`
-    );
-  }
-});
-
-[robe, shield, helmet, boots].forEach((armor) => {
-  if (manager.canEquipArmor(warrior)) {
-    warrior.equipArmor(armor);
-    console.log(`${warrior.name} equipped ${armor.name}`);
-  } else {
-    console.log(
-      `❌ ${warrior.name} cannot equip ${armor.name}, armor limit reached`
-    );
-  }
-});
+[sword, axe, machete].forEach((weapon) => warrior.equipWeapon(weapon));
+[plateArmor, helmet, boots].forEach((armor) => warrior.equipArmor(armor));
 
 console.log('\n=== Testing Mage Equipment ===');
-[sword, axe].forEach((weapon) => {
-  if (manager.canEquipWeapon(mage)) {
-    mage.equipWeapon(weapon);
-    console.log(`${mage.name} equipped ${weapon.name}`);
-  } else {
-    console.log(
-      `❌ ${mage.name} cannot equip ${weapon.name}, mages cannot equip weapons`
-    );
-  }
-});
-
-[robe, shield, helmet, boots].forEach((armor) => {
-  if (manager.canEquipArmor(mage)) {
-    mage.equipArmor(armor);
-    console.log(`${mage.name} equipped ${armor.name}`);
-  } else {
-    console.log(
-      `❌ ${mage.name} cannot equip ${armor.name}, armor limit reached`
-    );
-  }
-});
+[wand, sword, axe].forEach((weapon) => mage.equipWeapon(weapon));
+[clothArmor, helmet].forEach((armor) => mage.equipArmor(armor));
 
 // Calculate current combat power
 console.log('\n=== Calculating Combat Power ===');
@@ -94,24 +55,24 @@ console.log(
 
 console.log('\n=== Testing Unequipping ===');
 warrior.unequipWeapon('Sword'); // Should remove "Sword"
-warrior.unequipArmor('Shield'); // Should remove "Shield"
-warrior.unequipWeapon('Bow'); // Should fail (not equipped)
-warrior.unequipArmor('Helmet'); // Should remove "Helmet"
+warrior.unequipArmor('Helmet'); // Should remove "Shield"
+warrior.unequipWeapon('Bow'); // ❌ Should fail (not equipped)
+warrior.unequipArmor('Boots'); // Should remove "Helmet"
 
-mage.unequipWeapon('Sword'); // Should remove "Sword"
-mage.unequipArmor('Shield'); // Should remove "Shield"
-mage.unequipWeapon('Bow'); // Should fail (not equipped)
-mage.unequipArmor('Helmet'); // Should remove "Helmet"
+mage.unequipWeapon('Wand'); // Should remove "Magic Staff"
+mage.unequipArmor('Wand'); // Should remove "Silk Robe"
+mage.unequipWeapon('Axe'); // ❌ Should fail (not equipped)
+mage.unequipArmor('Helmet'); // ❌ Should fail (wrong type)
 
-// Current items Warrior equipped
-console.log('\n=== Current Items Equipped ===');
+console.log('\n=== Final Equipped Items ===');
+// Final items Warrior equipped
 console.log(
   `${warrior.name} equipped weapons: ${warrior.equippedWeapons.map((w) => w.name).join(', ')}`
 );
 console.log(
   `${warrior.name} equipped armors: ${warrior.equippedArmors.map((a) => a.name).join(', ')}`
 );
-// Current items Mage equipped
+// Final items Mage equipped
 console.log(
   `${mage.name} equipped weapons: ${mage.equippedWeapons.map((w) => w.name).join(', ')}`
 );
@@ -119,8 +80,8 @@ console.log(
   `${mage.name} equipped armors: ${mage.equippedArmors.map((a) => a.name).join(', ')}`
 );
 
-// Calculate combat power
-console.log('\n=== Calculating Combat Power ===');
+// Calculate final combat power
+console.log('\n=== Final Combat Power ===');
 console.log(
   `${warrior.name} Combat Power: ${CombatPowerCalculator.calculate(warrior)}`
 );

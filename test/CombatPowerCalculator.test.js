@@ -14,12 +14,12 @@ describe('CombatPowerCalculator', () => {
   });
 
   test('should calculate combat power for a Warrior', () => {
-    warrior.equipWeapon(new Weapon('Sword', 50));
+    warrior.equipWeapon(new Weapon('Sword', 50, 'sword')); // Fixed weapon type
     expect(CombatPowerCalculator.calculate(warrior)).toBe(75); // 50 * 1.5
   });
 
   test('should calculate combat power for a Mage', () => {
-    mage.equipArmor(new Armor('Magic Robe', 30));
+    mage.equipArmor(new Armor('Magic Robe', 30, 'cloth')); // Fixed armor type
     expect(CombatPowerCalculator.calculate(mage)).toBe(60); // 30 * 2
   });
 

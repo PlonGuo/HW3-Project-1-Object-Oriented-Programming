@@ -52,19 +52,33 @@ export class Character {
   }
 
   /**
-   * Equip a weapon
+   * Equip a weapon (restricted by character type)
    * @param {Weapon} weapon - The weapon to equip
    */
   equipWeapon(weapon) {
+    if (!this.allowedWeaponTypes.includes(weapon.type)) {
+      console.log(
+        `❌ ${this._name} cannot equip ${weapon.name}, invalid weapon type (${weapon.type})`
+      );
+      return;
+    }
     this._equippedWeapons.push(weapon);
+    console.log(`${this._name} equipped ${weapon.name}`);
   }
 
   /**
-   * Equip an armor
+   * Equip an armor (restricted by character type)
    * @param {Armor} armor - The armor to equip
    */
   equipArmor(armor) {
+    if (!this.allowedArmorTypes.includes(armor.type)) {
+      console.log(
+        `❌ ${this._name} cannot equip ${armor.name}, invalid armor type (${armor.type})`
+      );
+      return;
+    }
     this._equippedArmors.push(armor);
+    console.log(`${this._name} equipped ${armor.name}`);
   }
 
   /**

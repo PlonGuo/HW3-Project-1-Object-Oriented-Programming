@@ -7,7 +7,7 @@ export class Weapon {
    * @param {number} attackPower - Attack power of the weapon.
    * @param {string} type - Weapon type (e.g., 'sword', 'axe', 'staff')
    */
-  constructor(name, attackPower) {
+  constructor(name, attackPower, type) {
     this._name = name; // private
     this._attackPower = attackPower; // private
     this._type = type; // Weapon type

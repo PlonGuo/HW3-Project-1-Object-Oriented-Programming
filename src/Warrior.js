@@ -8,6 +8,16 @@ export class Warrior extends Character {
     super(name, 'Warrior');
   }
 
+  // Allowed weapon types for Warriors
+  get allowedWeaponTypes() {
+    return ['sword', 'axe', 'machete'];
+  }
+
+  // Allowed armor types for Warriors
+  get allowedArmorTypes() {
+    return ['plate'];
+  }
+
   /**
    * Calculate combat power for Warrior.
    * @returns {number}

@@ -13,7 +13,7 @@ describe('Mage', () => {
   });
 
   test('should calculate combat power correctly', () => {
-    mage.equipArmor(new Armor('Shield', 30));
+    mage.equipArmor(new Armor('Shield', 30, 'cloth'));
     expect(mage.calculateCombatPower()).toBe(60);
   });
 });

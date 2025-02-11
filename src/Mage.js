@@ -8,6 +8,15 @@ export class Mage extends Character {
     super(name, 'Mage');
   }
 
+  // Allowed weapon types for Mages
+  get allowedWeaponTypes() {
+    return ['wand'];
+  }
+
+  // Allowed armor types for Mages
+  get allowedArmorTypes() {
+    return ['cloth'];
+  }
   /**
    * Calculate combat power for Mage.
    * @returns {number}

@@ -16,26 +16,26 @@ describe('EquipmentManager', () => {
   });
 
   test('should prevent equipping more than 2 weapons', () => {
-    warrior.equipWeapon(new Weapon('Sword', 50));
-    warrior.equipWeapon(new Weapon('Axe', 40));
+    warrior.equipWeapon(new Weapon('Sword', 50, 'sword'));
+    warrior.equipWeapon(new Weapon('Axe', 40, 'axe'));
     expect(manager.canEquipWeapon(warrior)).toBe(false);
   });
 
   test('should allow equipping up to 2 weapons', () => {
-    warrior.equipWeapon(new Weapon('Sword', 50));
+    warrior.equipWeapon(new Weapon('Sword', 50, 'sword'));
     expect(manager.canEquipWeapon(warrior)).toBe(true);
   });
 
   test('should prevent equipping more than 3 armors', () => {
-    mage.equipArmor(new Armor('Robe', 10));
-    mage.equipArmor(new Armor('Shield', 20));
-    mage.equipArmor(new Armor('Helmet', 15));
+    mage.equipArmor(new Armor('Robe', 10, 'cloth'));
+    mage.equipArmor(new Armor('Shield', 20, 'cloth'));
+    mage.equipArmor(new Armor('Helmet', 15, 'cloth'));
     expect(manager.canEquipArmor(mage)).toBe(false);
   });
 
   test('should allow equipping up to 3 armor pieces', () => {
-    mage.equipArmor(new Armor('Robe', 10));
-    mage.equipArmor(new Armor('Shield', 20));
+    mage.equipArmor(new Armor('Robe', 10, 'cloth'));
+    mage.equipArmor(new Armor('Shield', 20, 'cloth'));
     expect(manager.canEquipArmor(mage)).toBe(true);
   });
 

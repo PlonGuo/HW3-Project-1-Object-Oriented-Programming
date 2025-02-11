@@ -13,7 +13,7 @@ describe('Warrior', () => {
   });
 
   test('should calculate combat power correctly', () => {
-    warrior.equipWeapon(new Weapon('Sword', 50));
+    warrior.equipWeapon(new Weapon('Sword', 50, 'sword')); // Added 'sword' type
     expect(warrior.calculateCombatPower()).toBe(75);
   });
 });
