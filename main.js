@@ -1,90 +1,229 @@
+import readline from 'readline';
 import { CharacterFactory } from './src/CharacterFactory.js';
 import { Weapon } from './src/Weapon.js';
 import { Armor } from './src/Armor.js';
-// import { EquipmentManager } from './src/EquipmentManager.js';
 import { CombatPowerCalculator } from './src/CombatPowerCalculator.js';
 
-// create characters
-const warrior = CharacterFactory.createCharacter('Warrior', 'Thor');
-const mage = CharacterFactory.createCharacter('Mage', 'Merlin');
+// Create Readline interface for user input
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
 
-// create items
-const sword = new Weapon('Sword', 60, 'sword'); // Valid for Warrior
-const axe = new Weapon('Axe', 55, 'axe'); // Valid for Warrior
-const machete = new Weapon('Dagger', 40, 'dagger'); // Valid for Mage
-const wand = new Weapon('Wand', 35, 'wand'); // Invalid for both
+// Available Weapons and Armors
+const availableWeapons = [
+  new Weapon('Sword', 60, 'sword'),
+  new Weapon('Axe', 55, 'axe'),
+  new Weapon('Dagger', 40, 'dagger'),
+  new Weapon('Wand', 100, 'wand'),
+];
 
-const plateArmor = new Armor('Steel Plate', 40, 'plate'); // Valid for Warrior
-const clothArmor = new Armor('Silk Robe', 20, 'cloth'); // Valid for Mage
-const leatherArmor = new Armor('Leather Vest', 25, 'leather'); // Invalid for both
-const helmet = new Armor('Helmet', 15, 'plate'); // ✅ Valid for Warrior
-const boots = new Armor('Boots', 10, 'plate'); // ✅ Valid for Warrior
+const availableArmors = [
+  new Armor('Steel Plate', 40, 'plate'),
+  new Armor('Helmet', 30, 'plate'),
+  new Armor('Boots', 20, 'plate'),
+  new Armor('Silk Robe', 25, 'cloth'),
+  new Armor('Silk Turban', 30, 'cloth'),
+  new Armor('Silk Shoes', 35, 'cloth'),
+  new Armor('Leather Vest', 25, 'leather'),
+];
 
-console.log('\n=== Testing Warrior Equipment ===');
-[sword, axe, machete].forEach((weapon) => warrior.equipWeapon(weapon));
-[plateArmor, helmet, boots].forEach((armor) => warrior.equipArmor(armor));
+// Character creation function
+function createCharacter() {
+  rl.question('Choose your character type (Warrior/Mage): ', (type) => {
+    type = type.trim();
+    if (type !== 'Warrior' && type !== 'Mage') {
+      console.log(
+        "❌ Invalid character type! Please enter 'Warrior' or 'Mage'."
+      );
+      rl.close();
+      return;
+    }
 
-console.log('\n=== Testing Mage Equipment ===');
-[wand, sword, axe].forEach((weapon) => mage.equipWeapon(weapon));
-[clothArmor, helmet].forEach((armor) => mage.equipArmor(armor));
+    rl.question('Enter your character name: ', (name) => {
+      name = name.trim();
+      if (!name) {
+        console.log('❌ Character name cannot be empty!');
+        rl.close();
+        return;
+      }
 
-// Calculate current combat power
-console.log('\n=== Calculating Combat Power ===');
-console.log(
-  `${warrior.name} Combat Power: ${CombatPowerCalculator.calculate(warrior)}`
-);
-console.log(
-  `${mage.name} Combat Power: ${CombatPowerCalculator.calculate(mage)}`
-);
+      const character = CharacterFactory.createCharacter(type, name);
+      console.log(
+        `✅ Character Created: ${character.name} the ${character.type}\n`
+      );
 
-// Current items Warrior equipped
-console.log('\n=== Current Items Equipped ===');
-console.log(
-  `${warrior.name} equipped weapons: ${warrior.equippedWeapons.map((w) => w.name).join(', ')}`
-);
-console.log(
-  `${warrior.name} equipped armors: ${warrior.equippedArmors.map((a) => a.name).join(', ')}`
-);
-// Current items Mage equipped
-console.log(
-  `${mage.name} equipped weapons: ${mage.equippedWeapons.map((w) => w.name).join(', ')}`
-);
-console.log(
-  `${mage.name} equipped armors: ${mage.equippedArmors.map((a) => a.name).join(', ')}`
-);
+      equipWeapons(character, () => {
+        equipArmors(character, () => {
+          unequipItems(character, () => {
+            runTestCases(character);
+          });
+        });
+      });
+    });
+  });
+}
 
-console.log('\n=== Testing Unequipping ===');
-warrior.unequipWeapon('Sword'); // Should remove "Sword"
-warrior.unequipArmor('Helmet'); // Should remove "Shield"
-warrior.unequipWeapon('Bow'); // ❌ Should fail (not equipped)
-warrior.unequipArmor('Boots'); // Should remove "Helmet"
+// Equip Weapons
+function equipWeapons(character, callback) {
+  function equipLoop() {
+    if (character.equippedWeapons.length >= 2) {
+      console.log(`✅ You have reached the weapon limit (2).`);
+      callback();
+      return;
+    }
 
-mage.unequipWeapon('Wand'); // Should remove "Magic Staff"
-mage.unequipArmor('Wand'); // Should remove "Silk Robe"
-mage.unequipWeapon('Axe'); // ❌ Should fail (not equipped)
-mage.unequipArmor('Helmet'); // ❌ Should fail (wrong type)
+    console.log(`\nAvailable Weapons:`);
+    availableWeapons.forEach((weapon, index) => {
+      console.log(
+        `[${index + 1}] ${weapon.name} (Type: ${weapon.type}, Power: ${weapon.attackPower})`
+      );
+    });
+    console.log(`[0] Skip`);
 
-console.log('\n=== Final Equipped Items ===');
-// Final items Warrior equipped
-console.log(
-  `${warrior.name} equipped weapons: ${warrior.equippedWeapons.map((w) => w.name).join(', ')}`
-);
-console.log(
-  `${warrior.name} equipped armors: ${warrior.equippedArmors.map((a) => a.name).join(', ')}`
-);
-// Final items Mage equipped
-console.log(
-  `${mage.name} equipped weapons: ${mage.equippedWeapons.map((w) => w.name).join(', ')}`
-);
-console.log(
-  `${mage.name} equipped armors: ${mage.equippedArmors.map((a) => a.name).join(', ')}`
-);
+    rl.question('Choose a weapon to equip: ', (choice) => {
+      choice = parseInt(choice);
+      if (choice === 0) {
+        callback();
+        return;
+      }
+      if (choice < 1 || choice > availableWeapons.length) {
+        console.log('❌ Invalid choice.');
+        equipLoop();
+        return;
+      }
 
-// Calculate final combat power
-console.log('\n=== Final Combat Power ===');
-console.log(
-  `${warrior.name} Combat Power: ${CombatPowerCalculator.calculate(warrior)}`
-);
-console.log(
-  `${mage.name} Combat Power: ${CombatPowerCalculator.calculate(mage)}`
-);
+      const weapon = availableWeapons[choice - 1];
+      character.equipWeapon(weapon);
+      equipLoop();
+    });
+  }
+  equipLoop();
+}
+
+// Equip Armors
+function equipArmors(character, callback) {
+  function equipLoop() {
+    if (character.equippedArmors.length >= 3) {
+      console.log(`✅ You have reached the armor limit (3).`);
+      callback();
+      return;
+    }
+
+    console.log(`\nAvailable Armors:`);
+    availableArmors.forEach((armor, index) => {
+      console.log(
+        `[${index + 1}] ${armor.name} (Type: ${armor.type}, Power: ${armor.defensePower})`
+      );
+    });
+    console.log(`[0] Skip`);
+
+    rl.question('Choose an armor to equip: ', (choice) => {
+      choice = parseInt(choice);
+      if (choice === 0) {
+        callback();
+        return;
+      }
+      if (choice < 1 || choice > availableArmors.length) {
+        console.log('❌ Invalid choice.');
+        equipLoop();
+        return;
+      }
+
+      const armor = availableArmors[choice - 1];
+      character.equipArmor(armor);
+      equipLoop();
+    });
+  }
+  equipLoop();
+}
+
+// Unequip Items
+function unequipItems(character, callback) {
+  function unequipWeaponLoop() {
+    if (character.equippedWeapons.length === 0) {
+      unequipArmorLoop();
+      return;
+    }
+
+    console.log(`\nUnequipped Weapons:`);
+    character.equippedWeapons.forEach((weapon, index) => {
+      console.log(
+        `[${index + 1}] ${weapon.name} (Type: ${weapon.type}, Power: ${weapon.attackPower})`
+      );
+    });
+    console.log(`[0] Skip`);
+
+    rl.question('Choose a weapon to unequip: ', (choice) => {
+      choice = parseInt(choice);
+      if (choice === 0) {
+        unequipArmorLoop();
+        return;
+      }
+      if (choice < 1 || choice > character.equippedWeapons.length) {
+        console.log('❌ Invalid choice.');
+        unequipWeaponLoop();
+        return;
+      }
+
+      const weaponName = character.equippedWeapons[choice - 1].name;
+      character.unequipWeapon(weaponName);
+      unequipWeaponLoop();
+    });
+  }
+
+  function unequipArmorLoop() {
+    if (character.equippedArmors.length === 0) {
+      callback();
+      return;
+    }
+
+    console.log(`\nUnequipped Armors:`);
+    character.equippedArmors.forEach((armor, index) => {
+      console.log(
+        `[${index + 1}] ${armor.name} (Type: ${armor.type}, Power: ${armor.defensePower})`
+      );
+    });
+    console.log(`[0] Skip`);
+
+    rl.question('Choose an armor to unequip: ', (choice) => {
+      choice = parseInt(choice);
+      if (choice === 0) {
+        callback();
+        return;
+      }
+      if (choice < 1 || choice > character.equippedArmors.length) {
+        console.log('❌ Invalid choice.');
+        unequipArmorLoop();
+        return;
+      }
+
+      const armorName = character.equippedArmors[choice - 1].name;
+      character.unequipArmor(armorName);
+      unequipArmorLoop();
+    });
+  }
+
+  unequipWeaponLoop();
+}
+
+// Run Test Cases
+function runTestCases(character) {
+  console.log(
+    `\n=== Running Equipment & Combat Power Tests for ${character.name} ===`
+  );
+  console.log(`📜 Final Equipment for ${character.name}`);
+  console.log(
+    `⚔️ Weapons: ${character.equippedWeapons.map((w) => w.name).join(', ') || 'None'}`
+  );
+  console.log(
+    `🛡️ Armors: ${character.equippedArmors.map((a) => a.name).join(', ') || 'None'}`
+  );
+  console.log(
+    `🔥 Final Combat Power: ${CombatPowerCalculator.calculate(character)}`
+  );
+  rl.close();
+}
+
+// Start character creation process
+createCharacter();
