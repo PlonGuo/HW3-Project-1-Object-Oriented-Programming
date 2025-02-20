@@ -98,3 +98,12 @@ This project is built using Object-Oriented Programming (OOP) principles and fol
     • Factory Pattern - (CharacterFactory.js)
     • Strategy Pattern - (CombatPowerCalculator.js)
     • Singleton Pattern - (EquipmentManager.js)
+
+## AI Usage:
+
+    • User Persona, the prompt that I gave ChatGPT 4o is Casual player, hardcore gamer which has knowledge of game design, and the master player of RPG game. I think the response AI gave me makes sense because it covers players from different dimensions logically.    
+    • I ask ChatGPT 4o to summarize the key points in Problem Statement, and the prompt is the entire Problem Statement, and the summary is precise.
+    • I ask ChatGPT 4o to help me implement the Business Requirement in case that I miss something. The prompt is the Business Requirement that I wrote. It did help me add something about     Scalability and Rules & Constraints which are both significant to RPG Games. 
+    • I used ChatGPT4o to assist in writing JSDoc documentation. The prompt that I use is all my classes with attributes and method that I defined in UML diagram.
+    • I also talked to ChatGPT 4o a lot to discuss whether some of my ideas were logical or not.
+
