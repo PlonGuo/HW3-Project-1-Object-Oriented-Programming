@@ -107,3 +107,9 @@ This project is built using Object-Oriented Programming (OOP) principles and fol
     • I used ChatGPT4o to assist in writing JSDoc documentation. The prompt that I use is all my classes with attributes and method that I defined in UML diagram.
     • I also talked to ChatGPT 4o a lot to discuss whether some of my ideas were logical or not.
 
+## Youtube Video Link for App UI mockup
+    https://youtu.be/tUaCVw40EH0
+
+## UML Diagram/Figma UI mockup
+    Please find these pdf above in the main branch.
+
